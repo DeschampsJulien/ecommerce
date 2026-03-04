@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,11 +10,19 @@ use Symfony\Component\Routing\Attribute\Route;
 class CartController extends AbstractController
 {
     #[Route('/cart', name: 'cart')]
-    public function index(): Response
+    public function index(CartService $cartService): Response
     {
-        // Pour l’instant on fait juste un test
         return $this->render('cart/index.html.twig', [
-            'message' => 'Page Panier en construction',
+            'cart' => $cartService->getCart(),
+            'total' => $cartService->getTotal(),
         ]);
+    }
+
+    #[Route('/cart/remove/{key}', name: 'cart_remove')]
+    public function remove(string $key, CartService $cartService): Response
+    {
+        $cartService->remove($key);
+
+        return $this->redirectToRoute('cart');
     }
 }

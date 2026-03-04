@@ -2,18 +2,18 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use App\Entity\Product;
 
 class CartService
 {
     private const CART_KEY = 'cart';
 
-    private SessionInterface $session;
+    private $session;
 
-    public function setSession(SessionInterface $session): void
+    public function __construct(RequestStack $requestStack)
     {
-        $this->session = $session;
+        $this->session = $requestStack->getSession();
     }
 
     public function getCart(): array
@@ -44,10 +44,8 @@ class CartService
     public function remove(string $key): void
     {
         $cart = $this->getCart();
-        if (isset($cart[$key])) {
-            unset($cart[$key]);
-            $this->session->set(self::CART_KEY, $cart);
-        }
+        unset($cart[$key]);
+        $this->session->set(self::CART_KEY, $cart);
     }
 
     public function getTotal(): float
@@ -57,5 +55,16 @@ class CartService
             $total += $item['price'] * $item['quantity'];
         }
         return $total;
+    }
+
+    public function getItemCount(): int
+    {
+        $count = 0;
+
+        foreach ($this->getCart() as $item) {
+            $count += $item['quantity'];
+        }
+
+        return $count;
     }
 }

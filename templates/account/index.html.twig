@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <h1>Mon compte</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <p><strong>Nom :</strong> {{ app.user.name }}</p>
+            <p><strong>Email :</strong> {{ app.user.email }}</p>
+            <p><strong>Adresse :</strong> {{ app.user.deliveryAddress }}</p>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="#" class="btn btn-primary">Voir mes commandes</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -2,9 +2,14 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block body %}
+{% block body %} 
 
-<h1>bienvenue chez Stubborn</h1>
+{% if app.user %}
+    <h1>bienvenue {{ app.user.name }} chez Stubborn</h1>
+{% else %}
+    <h1>bienvenue chez Stubborn</h1>
+{% endif %}
+
 <p><strong>Don't compromise on your look</strong></p>
 <p>Adresse : Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
 <p>Email : stubborn@blabla.com</p>
