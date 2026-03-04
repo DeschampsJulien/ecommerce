@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block body %}
+<h1>{{ product.name }}</h1>
+<p>Prix : {{ product.price }} €</p>
+
+<h3>Tailles disponibles :</h3>
+
+<form method="post">
+    <label for="size">Taille :</label>
+    <select name="size" id="size" required>
+        {% for stock in product.stocks %}
+            {% if stock.quantity > 0 %}
+                <option value="{{ stock.size }}">
+                    {{ stock.size }} (Stock : {{ stock.quantity }})
+                </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+
+    <label for="quantity">Quantité :</label>
+    <input type="number" name="quantity" id="quantity" min="1" value="1" required>
+
+    <button type="submit">Ajouter au panier</button>
+</form>
+
+<a href="{{ path('products') }}">
+    <button>Retour à la boutique</button>
+</a>
+{% endblock %}

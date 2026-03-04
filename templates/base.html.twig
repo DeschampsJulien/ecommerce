@@ -1,17 +1,70 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Ecommerce{% endblock %}</title>
+    <style>
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+        nav a.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+<nav>
+    <ul>
+        <li>
+            <a href="{{ path('home') }}"
+               class="{% if app.request.attributes.get('_route') == 'home' %}active{% endif %}">
+                Accueil
+            </a>
+        </li>
+
+        {% if app.user %}
+            <li>
+                <a href="{{ path('products') }}"
+                   class="{% if app.request.attributes.get('_route') == 'products' %}active{% endif %}">
+                    Boutique
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('cart') }}"
+                   class="{% if app.request.attributes.get('_route') == 'cart' %}active{% endif %}">
+                    Panier
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_logout') }}">
+                    Se déconnecter
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path('app_register') }}"
+                   class="{% if app.request.attributes.get('_route') == 'app_register' %}active{% endif %}">
+                    S’inscrire
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_login') }}"
+                   class="{% if app.request.attributes.get('_route') == 'app_login' %}active{% endif %}">
+                    Se connecter
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<hr>
+
+{% block body %}{% endblock %}
+
+</body>
 </html>

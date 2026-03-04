@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+<h1>bienvenue chez Stubborn</h1>
+<p><strong>Don't compromise on your look</strong></p>
+<p>Adresse : Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
+<p>Email : stubborn@blabla.com</p>
+
+<hr>
+
+<h2>Sweat-shirts mis en avant</h2>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    {% for product in featuredProducts %}
+        <div style="border:1px solid #ccc; padding:15px; width:200px;">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }} €</p>
+
+            {% if app.user %}
+                <a href="{{ path('product_show', {id: product.id}) }}">
+                    <button>Voir</button>
+                </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Aucun produit mis en avant.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
