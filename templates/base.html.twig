@@ -35,9 +35,13 @@
                 </a>
             </li>
             <li>
-                <a href="{{ path('cart') }}"
-                   class="{% if app.request.attributes.get('_route') == 'cart' %}active{% endif %}">
-                    Panier
+                <a href="{{ path('cart') }}">
+                    🛒 Panier ({{ cartItemCount }})
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('account') }}">
+                    Mon compte
                 </a>
             </li>
             <li>
