@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boutique{% endblock %}
+
+{% block body %}
+<h1>Boutique</h1>
+
+<h3>Filtrer par prix :</h3>
+<form method="get" action="{{ path('products') }}">
+    <select name="price" onchange="this.form.submit()">
+        <option value="">-- Tous les prix --</option>
+        <option value="10-29" {% if selectedRange == '10-29' %}selected{% endif %}>10 à 29 €</option>
+        <option value="29-35" {% if selectedRange == '29-35' %}selected{% endif %}>29 à 35 €</option>
+        <option value="35-50" {% if selectedRange == '35-50' %}selected{% endif %}>35 à 50 €</option>
+    </select>
+</form>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+    {% for product in products %}
+        <div style="border:1px solid #ccc; padding:15px; width:200px;">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }} €</p>
+            {% if app.user %}
+                <a href="{{ path('product_show', {id: product.id}) }}">
+                    <button>Voir</button>
+                </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Aucun produit trouvé pour cette fourchette de prix.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
