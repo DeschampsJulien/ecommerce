@@ -44,4 +44,15 @@
     <button>Continuer mes achats</button>
 </a>
 
+{% if app.user %}
+    <a href="{{ path('cart_checkout') }}">
+        <button>Finaliser ma commande</button>
+    </a>
+{% else %}
+    <p>
+        <a href="{{ path('app_login') }}">Connectez-vous</a>
+        pour finaliser votre commande.
+    </p>
+{% endif %}
+
 {% endblock %}
