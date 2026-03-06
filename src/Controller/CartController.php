@@ -52,32 +52,32 @@ class CartController extends AbstractController
 
         $total = 0;
 
-        foreach ($cart as $key => $quantity) {
+    foreach ($cart as $key => $quantity) {
 
-            // [$id, $size] = explode('_', $key);
-            $parts = explode('_', $key);
+        $parts = explode('_', $key);
 
-            $id = $parts[0];
-            $size = $parts[1] ?? 'M';
+        $id = $parts[0];
+        $size = $parts[1] ?? 'M';
 
-            $product = $productRepository->find($id);
+        $product = $productRepository->find($id);
 
-            if (!$product) {
-                continue;
-            }
-
-            $qty = is_array($quantity) ? (int) $quantity['quantity'] : (int) $quantity;
-
-            $orderItem = new OrderItem();
-            $orderItem->setProductName($product->getName());
-            $orderItem->setPrice($product->getPrice());
-            $orderItem->setQuantity((int)$quantity);
-            $orderItem->setSize($size);
-
-            $order->addOrderItem($orderItem);
-
-            $total += $product->getPrice() * $qty;
+        if (!$product) {
+            continue;
         }
+
+        // calcule quantité correcte
+        $qty = is_array($quantity) ? (int) $quantity['quantity'] : (int) $quantity;
+
+        $orderItem = new OrderItem();
+        $orderItem->setProductName($product->getName());
+        $orderItem->setPrice($product->getPrice());
+        $orderItem->setQuantity($qty); // ✅ utilise $qty
+        $orderItem->setSize($size);
+
+        $order->addOrderItem($orderItem);
+
+        $total += $product->getPrice() * $qty;
+    }
 
         $order->setTotal($total);
 
