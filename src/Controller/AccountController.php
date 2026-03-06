@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\OrderRepository;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,6 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AccountController extends AbstractController
 {
+    // Page "Mon compte"
     #[Route('/account', name: 'account')]
     public function index(): Response
     {
@@ -18,28 +18,27 @@ class AccountController extends AbstractController
 
         return $this->render('account/index.html.twig');
     }
-    
+
+    // Page "Mes commandes"
     #[Route('/account/orders', name: 'account_orders')]
-    public function orders(OrderRepository $orderRepository): Response
+    public function orders(EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $orders = $orderRepository->findBy(
+        $orders = $em->getRepository(Order::class)->findBy(
             ['user' => $this->getUser()],
             ['id' => 'DESC']
         );
 
         return $this->render('account/orders.html.twig', [
-            'orders' => $orders,
+            'orders' => $orders
         ]);
     }
 
+    // Page "Détail commande"
     #[Route('/account/orders/{id}', name: 'account_order_show')]
-    public function showOrder(
-        int $id,
-        EntityManagerInterface $em
-    ): Response {
-
+    public function showOrder(int $id, EntityManagerInterface $em): Response
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $order = $em->getRepository(Order::class)->find($id);
@@ -48,7 +47,6 @@ class AccountController extends AbstractController
             throw $this->createNotFoundException('Commande introuvable');
         }
 
-        // sécurité : vérifier que la commande appartient à l'utilisateur
         if ($order->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }

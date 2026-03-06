@@ -1,42 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détail commande{% endblock %}
+{% block title %}Détail commande #{{ order.id }}{% endblock %}
 
 {% block body %}
 
 <h1>Commande #{{ order.id }}</h1>
 
 <p>
-Statut : {{ order.status }} <br>
-Total : {{ order.total }} €
+    <strong>Statut :</strong> {{ order.status }}<br>
+    <strong>Total :</strong> {{ order.total }} €
 </p>
 
-<h2>Produits</h2>
+<h2>Produits commandés</h2>
 
-<table>
-    <thead>
-        <tr>
-            <th>Produit</th>
-            <th>Taille</th>
-            <th>Prix</th>
-            <th>Quantité</th>
-            <th>Sous total</th>
-        </tr>
-    </thead>
-
-    <tbody>
-    {% for item in order.orderItems %}
-        <tr>
-            <td>{{ item.productName }}</td>
-            <td>{{ item.size }}</td>
-            <td>{{ item.price }} €</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.price * item.quantity }} €</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<a href="{{ path('account_orders') }}">← Retour aux commandes</a>
-
+{% if order.orderItems is empty %}
+    <p>Aucun produit dans cette commande.</p>
+{% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Taille</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Sous-total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderItems %}
+                <tr>
+                    <td>{{ item.productName }}</td>
+                    <td>{{ item.size }}</td>
+                    <td>{{ item.price }} €</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ (item.price * item.quantity)|number_format(2, ',', ' ') }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+<p>
+    <a href="{{ path('account_orders') }}">← Retour aux commandes</a>
+</p>
 {% endblock %}
