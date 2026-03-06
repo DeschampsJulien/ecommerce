@@ -67,4 +67,9 @@ class CartService
 
         return $count;
     }
+
+    public function clear(): void
+    {
+        $this->session->remove('cart');
+    }
 }

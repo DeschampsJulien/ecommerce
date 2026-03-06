@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail commande{% endblock %}
+
+{% block body %}
+
+<h1>Commande #{{ order.id }}</h1>
+
+<p>
+Statut : {{ order.status }} <br>
+Total : {{ order.total }} €
+</p>
+
+<h2>Produits</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Taille</th>
+            <th>Prix</th>
+            <th>Quantité</th>
+            <th>Sous total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for item in order.orderItems %}
+        <tr>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.price }} €</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price * item.quantity }} €</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('account_orders') }}">← Retour aux commandes</a>
+
+{% endblock %}

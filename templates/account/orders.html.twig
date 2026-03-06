@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+
+<h1>Mes commandes</h1>
+
+{% if orders is empty %}
+    <p>Vous n'avez pas encore de commandes.</p>
+{% else %}
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Total</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.total }} €</td>
+            <td>{{ order.status }}</td>
+            <td>
+                <a href="{{ path('account_order_show', {id: order.id}) }}">
+                    Voir
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}
