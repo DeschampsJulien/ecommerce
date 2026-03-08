@@ -42,4 +42,23 @@
 <p>
     <a href="{{ path('account_orders') }}">← Retour aux commandes</a>
 </p>
+{# {% if order.status == 'pending' %}
+    <h3>Paiement</h3>
+    <p>Montant à payer : {{ order.total }} €</p>
+    <p>Simulation de paiement Stripe en sandbox...</p>
+    <button disabled>Payer maintenant (sandbox)</button>
+    <a href="{{ path('order_pay', {id: order.id}) }}" class="btn btn-success">
+        Payer maintenant
+    </a>
+{% else %}
+    <p>Paiement effectué</p>
+{% endif %} #}
+{% if order.status != 'paid' %}
+    <a href="{{ path('order_pay', {id: order.id}) }}" class="btn btn-success">
+        Payer maintenant
+    </a>
+{% else %}
+    <p class="text-success"><strong>Commande déjà payée ✅</strong></p>
+{% endif %}
+
 {% endblock %}

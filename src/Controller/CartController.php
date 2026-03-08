@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\CartService;
+use App\Service\StripeService;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Repository\ProductRepository;
@@ -26,7 +27,6 @@ class CartController extends AbstractController
     public function remove(string $key, CartService $cartService): Response
     {
         $cartService->remove($key);
-
         return $this->redirectToRoute('cart');
     }
 
@@ -34,7 +34,7 @@ class CartController extends AbstractController
     public function checkout(
         CartService $cartService,
         ProductRepository $productRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): Response {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -51,42 +51,72 @@ class CartController extends AbstractController
         $order->setStatus('pending');
 
         $total = 0;
+        foreach ($cart as $key => $quantity) {
+            $parts = explode('_', $key);
+            $id = $parts[0];
+            $size = $parts[1] ?? 'M';
 
-    foreach ($cart as $key => $quantity) {
+            $product = $productRepository->find($id);
 
-        $parts = explode('_', $key);
+            if (!$product) {
+                continue;
+            }
 
-        $id = $parts[0];
-        $size = $parts[1] ?? 'M';
+            // calcule quantité correcte
+            $qty = is_array($quantity) ? (int) $quantity['quantity'] : (int) $quantity;
+            $orderItem = new OrderItem();
+            $orderItem->setProductName($product->getName());
+            $orderItem->setPrice($product->getPrice());
+            $orderItem->setQuantity($qty); // ✅ utilise $qty
+            $orderItem->setSize($size);
 
-        $product = $productRepository->find($id);
-
-        if (!$product) {
-            continue;
+            $order->addOrderItem($orderItem);
+            $total += $product->getPrice() * $qty;
         }
 
-        // calcule quantité correcte
-        $qty = is_array($quantity) ? (int) $quantity['quantity'] : (int) $quantity;
-
-        $orderItem = new OrderItem();
-        $orderItem->setProductName($product->getName());
-        $orderItem->setPrice($product->getPrice());
-        $orderItem->setQuantity($qty); // ✅ utilise $qty
-        $orderItem->setSize($size);
-
-        $order->addOrderItem($orderItem);
-
-        $total += $product->getPrice() * $qty;
-    }
-
         $order->setTotal($total);
-
         $em->persist($order);
         $em->flush();
 
         $cartService->clear();
 
         $this->addFlash('success', 'Commande validée avec succès.');
+
+        return $this->redirectToRoute('account_orders');
+    }
+
+    #[Route('/order/{id}/pay', name: 'order_pay')]
+    public function payOrder(
+        Order $order,
+        StripeService $stripeService
+    ): Response {
+
+        if ($order->getStatus() === 'paid') {
+            $this->addFlash('warning', 'Cette commande est déjà payée.');
+            return $this->redirectToRoute('account_orders');
+        }
+
+        $paymentIntent = $stripeService->createPaymentIntent(
+            $order->getTotal(),
+            'eur',
+            [
+                'order_id' => $order->getId()
+            ]
+        );
+
+        return $this->render('payment/stripe.html.twig', [
+            'clientSecret' => $paymentIntent->client_secret,
+            'order' => $order
+        ]);
+    }
+
+    #[Route('/payment/success/{id}', name: 'payment_success')]
+    public function paymentSuccess(Order $order, EntityManagerInterface $em): Response
+    {
+        $order->setStatus('paid');
+        $em->flush();
+
+        $this->addFlash('success', 'Paiement effectué avec succès !');
 
         return $this->redirectToRoute('account_orders');
     }
