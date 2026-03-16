@@ -73,7 +73,7 @@ class RegistrationController extends AbstractController
         EntityManagerInterface $entityManager,
         Security $security
     ): Response {
-        $id = $request->get('id');
+        $id = $request->query->get('id');
 
         if (!$id) {
             return $this->redirectToRoute('app_register');
@@ -82,6 +82,11 @@ class RegistrationController extends AbstractController
         $user = $entityManager->getRepository(User::class)->find($id);
         if (!$user) {
             return $this->redirectToRoute('app_register');
+        }
+
+        if ($user->isVerified()) {
+            $this->addFlash('info', 'Votre email est déjà vérifié.');
+            return $this->redirectToRoute('app_home');
         }
 
         try {
