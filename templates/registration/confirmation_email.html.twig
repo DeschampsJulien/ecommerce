@@ -1,5 +1,14 @@
-<h1>Inscription réussie !</h1>
+{% extends 'base.html.twig' %}
 
-<p>Un email de confirmation a été envoyé.</p>
+{% block title %}Confirmation_email{% endblock %}
 
-<p>Veuillez cliquer sur le lien dans l’email pour activer votre compte
+{% block body %} 
+<h1>confirmation_email.html.twig</h1>
+
+{# <h1>Inscription réussie ! {{ app.user.name }}</h1> #}
+
+<p><strong>Un email de confirmation a été envoyé.</strong></p>
+
+<p>Veuillez cliquer sur le lien dans l’email pour activer votre compte</p>
+
+{% endblock %}

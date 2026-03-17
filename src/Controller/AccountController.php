@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class AccountController extends AbstractController
 {
     // Page "Mon compte"
-    #[Route('/account', name: 'account')]
+    #[Route('/account', name: 'app_account')]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');

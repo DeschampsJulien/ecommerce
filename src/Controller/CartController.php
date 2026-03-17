@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CartController extends AbstractController
 {
-    #[Route('/cart', name: 'cart')]
+    #[Route('/cart', name: 'app_cart')]
     public function index(CartService $cartService): Response
     {
         return $this->render('cart/index.html.twig', [
@@ -27,7 +27,7 @@ class CartController extends AbstractController
     public function remove(string $key, CartService $cartService): Response
     {
         $cartService->remove($key);
-        return $this->redirectToRoute('cart');
+        return $this->redirectToRoute('app_cart');
     }
 
     #[Route('/cart/checkout', name: 'cart_checkout')]

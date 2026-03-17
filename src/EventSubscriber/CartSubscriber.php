@@ -1,5 +1,5 @@
 <?php
-
+// Rendre le compteur disponible dans tous les templates
 namespace App\EventSubscriber;
 
 use App\Service\CartService;

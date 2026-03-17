@@ -3,6 +3,7 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
+<h1>show.html.twig</h1>
 <h1>{{ product.name }}</h1>
 <p>Prix : {{ product.price }} €</p>
 
@@ -26,7 +27,7 @@
     <button type="submit">Ajouter au panier</button>
 </form>
 
-<a href="{{ path('products') }}">
+<a href="{{ path('app_products') }}">
     <button>Retour à la boutique</button>
 </a>
 {% endblock %}

@@ -44,7 +44,7 @@ class SecurityControllerAuthenticator extends AbstractLoginFormAuthenticator
     {
         // Redirection vers la page d'accueil après connexion
         return new RedirectResponse(
-            $this->router->generate('home')
+            $this->router->generate('app_home')
         );
     }
 

@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProductController extends AbstractController
 {
-    #[Route('/products', name: 'products')]
+    #[Route('/products', name: 'app_products')]
     public function index(ProductRepository $productRepository, Request $request): Response
     {
         $priceRange = $request->query->get('price');
@@ -59,7 +59,7 @@ class ProductController extends AbstractController
 
             $this->addFlash('success', 'Produit ajouté au panier !');
 
-            return $this->redirectToRoute('cart');
+            return $this->redirectToRoute('app_cart');
         }
 
         return $this->render('product/show.html.twig', [

@@ -6,7 +6,7 @@
 <h1>Boutique</h1>
 
 <h3>Filtrer par prix :</h3>
-<form method="get" action="{{ path('products') }}">
+<form method="get" action="{{ path('app_products') }}">
     <select name="price" onchange="this.form.submit()">
         <option value="">-- Tous les prix --</option>
         <option value="10-29" {% if selectedRange == '10-29' %}selected{% endif %}>10 à 29 €</option>
