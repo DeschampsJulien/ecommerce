@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>admin/edit.html.twig<h1>
+<h1>{{ product is defined ? 'Modifier le produit' : 'Ajouter un produit' }}</h1>
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button type="submit">Enregistrer</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_admin') }}">Retour</a>
+
+<h3>Stocks</h3>
+
+{% for stock in product.stocks %}
+    <form method="post" action="{{ path('admin_stock_update', {'id': stock.id}) }}">
+        <label>{{ stock.size }}</label>
+        <input type="number" name="quantity" value="{{ stock.quantity }}">
+        <button type="submit">Modifier</button>
+    </form>
+    {% if stock.quantity <= 2 %}
+        <span style="color:red;">⚠ Stock faible</span>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

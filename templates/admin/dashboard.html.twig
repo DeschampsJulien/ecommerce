@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>admin/dashboard.html.twig</h1>
+<h1>Dashboard Admin</h1>
+
+<div style="display:flex; gap:20px; margin-bottom:30px;">
+
+    <div style="padding:20px; border:1px solid black;">
+        <h3>Produits</h3>
+        <p>{{ totalProducts }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid black;">
+        <h3>Commandes</h3>
+        <p>{{ totalOrders }}</p>
+    </div>
+
+    <div style="padding:20px; border:1px solid black;">
+        <h3>Chiffre d'affaires</h3>
+        <p>{{ totalRevenue }} €</p>
+    </div>
+
+</div>
+
+<h2>🔥 Produits les plus vendus</h2>
+
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Produit</th>
+            <th>Quantité vendue</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in topProducts %}
+            <tr>
+                <td>
+                    {% if loop.index == 1 %}
+                        🥇
+                    {% elseif loop.index == 2 %}
+                        🥈
+                    {% elseif loop.index == 3 %}
+                        🥉
+                    {% else %}
+                        {{ loop.index }}
+                    {% endif %}
+                </td>
+                <td>{{ product.productName }}</td>
+                <td>{{ product.totalSold }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune vente</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+
+<a href="{{ path('admin_product_new') }}">➕ Ajouter produit</a>
+<br><br>
+<a href="{{ path('app_admin') }}">📦 Voir produits</a>
+
+{% endblock %}

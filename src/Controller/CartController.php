@@ -6,6 +6,7 @@ use App\Service\CartService;
 use App\Service\StripeService;
 use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Repository\StockRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,6 +35,7 @@ class CartController extends AbstractController
     public function checkout(
         CartService $cartService,
         ProductRepository $productRepository,
+        StockRepository $stockRepository,
         EntityManagerInterface $em,
     ): Response {
 
@@ -51,26 +53,72 @@ class CartController extends AbstractController
         $order->setStatus('pending');
 
         $total = 0;
+        // foreach ($cart as $key => $quantity) {
+        //     $parts = explode('_', $key);
+        //     $id = $parts[0];
+        //     $size = $parts[1] ?? 'M';
+
+        //     $product = $productRepository->find($id);
+
+        //     if (!$product) {
+        //         continue;
+        //     }
+
+        //     // calcule quantité correcte
+        //     $qty = is_array($quantity) ? (int) $quantity['quantity'] : (int) $quantity;
+        //     $orderItem = new OrderItem();
+        //     $orderItem->setProductName($product->getName());
+        //     $orderItem->setPrice($product->getPrice());
+        //     $orderItem->setQuantity($qty); // ✅ utilise $qty
+        //     $orderItem->setSize($size);
+
+        //     $order->addOrderItem($orderItem);
+        //     $total += $product->getPrice() * $qty;
+        // }
+
         foreach ($cart as $key => $quantity) {
+
             $parts = explode('_', $key);
             $id = $parts[0];
-            $size = $parts[1] ?? 'M';
+            // $size = $parts[1] ?? 'M';
+            if (!isset($parts[1])) {
+                throw new \Exception('Erreur panier : taille manquante');
+            }
 
+            $size = $parts[1];
+            
             $product = $productRepository->find($id);
 
             if (!$product) {
                 continue;
             }
 
-            // calcule quantité correcte
             $qty = is_array($quantity) ? (int) $quantity['quantity'] : (int) $quantity;
+
+            // 🔥 Récupération du stock
+            $stock = $stockRepository->findOneBy([
+                'product' => $product,
+                'size' => $size
+            ]);
+
+            // ❌ Vérification du stock
+            if (!$stock || $stock->getQuantity() < $qty) {
+                $this->addFlash('error', 'Stock insuffisant pour ' . $product->getName());
+                return $this->redirectToRoute('app_cart');
+            }
+
+            // 🔥 Décrémentation
+            $stock->setQuantity($stock->getQuantity() - $qty);
+
+            // 🧾 OrderItem
             $orderItem = new OrderItem();
             $orderItem->setProductName($product->getName());
             $orderItem->setPrice($product->getPrice());
-            $orderItem->setQuantity($qty); // ✅ utilise $qty
+            $orderItem->setQuantity($qty);
             $orderItem->setSize($size);
 
             $order->addOrderItem($orderItem);
+
             $total += $product->getPrice() * $qty;
         }
 

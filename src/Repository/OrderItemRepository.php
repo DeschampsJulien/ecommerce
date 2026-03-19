@@ -12,4 +12,15 @@ class OrderItemRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OrderItem::class);
     }
+
+    public function findTopProducts(int $limit = 5)
+    {
+        return $this->createQueryBuilder('oi')
+            ->select('oi.productName, SUM(oi.quantity) as totalSold')
+            ->groupBy('oi.productName')
+            ->orderBy('totalSold', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

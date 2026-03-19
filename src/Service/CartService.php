@@ -24,7 +24,7 @@ class CartService
     public function add(Product $product, string $size, int $quantity = 1): void
     {
         $cart = $this->getCart();
-        $key = $product->getId() . '-' . $size;
+        $key = $product->getId() . '_' . $size;
 
         if (isset($cart[$key])) {
             $cart[$key]['quantity'] += $quantity;
