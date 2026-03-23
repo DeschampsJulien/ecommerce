@@ -3,31 +3,84 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-<h1>show.html.twig</h1>
-<h1>{{ product.name }}</h1>
-<p>Prix : {{ product.price }} €</p>
 
-<h3>Tailles disponibles :</h3>
+<div class="container my-5">
+<p>product/show.html.twig</p>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-<form method="post">
-    <label for="size">Taille :</label>
-    <select name="size" id="size" required>
-        {% for stock in product.stocks %}
-            {% if stock.quantity > 0 %}
-                <option value="{{ stock.size }}">
-                    {{ stock.size }} (Stock : {{ stock.quantity }})
-                </option>
-            {% endif %}
-        {% endfor %}
-    </select>
+    <div class="row g-4">
 
-    <label for="quantity">Quantité :</label>
-    <input type="number" name="quantity" id="quantity" min="1" value="1" required>
+        <!-- IMAGE PRODUIT -->
+        <div class="col-md-6">
+            <div class="product-card">
+                <div class="product-img" style="height: 400px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <img src="{{ asset('images/' ~ product.image) }}" alt="{{ product.name }}" style="max-height:100%; max-width:100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
 
-    <button type="submit">Ajouter au panier</button>
-</form>
+        <!-- INFORMATIONS PRODUIT -->
+        <div class="col-md-6 d-flex flex-column justify-content-between">
 
-<a href="{{ path('app_products') }}">
-    <button>Retour à la boutique</button>
-</a>
+            <div>
+                <h1 class="fw-bold">{{ product.name }}</h1>
+                <p class="fs-4 text-corail fw-semibold">Prix : {{ product.price }} €</p>
+
+                <h5 class="mt-4">Tailles disponibles :</h5>
+
+                <form method="post" class="d-flex flex-column gap-3 mt-2">
+
+                    <div class="d-flex flex-column gap-1">
+                        <label for="size" class="fw-semibold">Taille :</label>
+                        <select name="size" id="size" class="form-select form-select-sm" required>
+                            {% for stock in product.stocks %}
+                                {% if stock.quantity > 0 %}
+                                    <option value="{{ stock.size }}" data-stock="{{ stock.quantity }}">
+                                        {{ stock.size }} (Stock : {{ stock.quantity }})
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="d-flex flex-column gap-1">
+                        <label for="quantity" class="fw-semibold">Quantité :</label>
+                        <input type="number" name="quantity" id="quantity" min="1" value="1" max="{{ product.stocks[0].quantity }}" class="form-control form-control-sm" required>
+                    </div>
+
+                    <button type="submit" class="btn-view mt-3">
+                        Ajouter au panier
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
+                <a href="{{ path('app_products') }}" class="btn-tropical">
+                    ← Retour à la boutique
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Empêche de dépasser le stock disponible
+    const quantityInput = document.getElementById('quantity');
+    const sizeSelect = document.getElementById('size');
+
+    sizeSelect.addEventListener('change', function(){
+        const stock = parseInt(this.options[this.selectedIndex].dataset.stock);
+        quantityInput.max = stock;
+        if(parseInt(quantityInput.value) > stock){
+            quantityInput.value = stock;
+        }
+    });
+</script>
+
 {% endblock %}

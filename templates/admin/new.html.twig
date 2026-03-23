@@ -1,13 +1,56 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>admin/new.html.twig<h1>
-<h1>{{ product is defined ? 'Modifier le produit' : 'Ajouter un produit' }}</h1>
 
-{{ form_start(form) }}
-{{ form_widget(form) }}
-<button type="submit">Enregistrer</button>
-{{ form_end(form) }}
+<div class="container my-5" style="max-width: 600px;">
+<p>admin/new.html.twig</p>
+    <h1 class="fw-bold mb-4 text-center">
+        Ajouter un produit
+    </h1>
 
-<a href="{{ path('app_admin') }}">Retour</a>
+    <div class="product-card p-4">
+
+        {{ form_start(form) }}
+
+        <!-- NOM -->
+        <div class="mb-3">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <!-- PRIX -->
+        <div class="mb-3">
+            {{ form_label(form.price) }}
+            {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <!-- IMAGE -->
+        <div class="mb-3">
+            {{ form_label(form.image) }}
+            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <!-- FEATURED -->
+        <div class="form-check mb-3">
+            {{ form_widget(form.featured, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.featured, null, {'label_attr': {'class': 'form-check-label'}}) }}
+        </div>
+
+        <!-- BOUTON -->
+        <button type="submit" class="btn-view w-100">
+            Enregistrer
+        </button>
+
+        {{ form_end(form) }}
+
+        <!-- RETOUR -->
+        <a href="{{ path('app_admin') }}"
+           class="btn btn-outline-dark w-100 mt-3 rounded-pill">
+            Retour
+        </a>
+
+    </div>
+
+</div>
+
 {% endblock %}

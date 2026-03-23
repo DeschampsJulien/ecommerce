@@ -3,63 +3,84 @@
 {% block title %}Mon panier{% endblock %}
 
 {% block body %}
-    <h1>cart/index.html.twig</h1>
 
-    {% for message in app.flashes('error') %}
-        <div style="color:red;">
-            {{ message }}
-        </div>
-    {% endfor %}
-
-    <h1>🛒 Mon panier</h1>
+<div class="container my-5">
+<p>cart/index.html.twig</p>
+    <h1 class="fw-bold mb-4">🛒 Mon panier</h1>
 
     {% if cart is empty %}
-        <p>Votre panier est vide.</p>
+
+        <div class="text-center py-5">
+            <p>Votre panier est vide 😢</p>
+            <a href="{{ path('app_products') }}" class="btn-tropical mt-3">
+                Voir la boutique
+            </a>
+        </div>
+
     {% else %}
 
-        <table border="1" cellpadding="10">
-            <tr>
-                <th>Produit</th>
-                <th>Taille</th>
-                <th>Prix</th>
-                <th>Quantité</th>
-                <th>Sous-total</th>
-                <th>Action</th>
-            </tr>
+        {% for item in cart %}
+            <div class="product-card d-flex flex-column flex-md-row align-items-center p-3 mb-3">
 
-            {% for key, item in cart %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.size }}</td>
-                    <td>{{ item.price }} €</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.price * item.quantity }} €</td>
-                    <td>
-                        <a href="{{ path('cart_remove', {key: key}) }}">
-                            ❌ Supprimer
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+                <!-- IMAGE -->
+                <div style="width:100px; height:100px; display:flex; align-items:center; justify-content:center;">
+                    <img src="{{ asset('images/' ~ item.image) }}"
+                         alt="{{ item.name }}"
+                         style="max-width:100%; max-height:100%; object-fit:contain;">
+                </div>
 
-        <h2>Total : {{ total }} €</h2>
+                <!-- INFOS -->
+                <div class="ms-3 flex-grow-1">
+                    <div class="fw-bold">{{ item.name }}</div>
+                    <div class="text-muted small">Taille : {{ item.size }}</div>
+                    <div class="text-corail fw-semibold">{{ item.price }} €</div>
+                </div>
+
+                <!-- QUANTITÉ -->
+                <div class="mx-3 text-center">
+                    <div class="small text-muted">Qté</div>
+                    <div class="fw-bold">{{ item.quantity }}</div>
+                </div>
+
+                <!-- TOTAL -->
+                <div class="fw-bold mx-3">
+                    {{ item.price * item.quantity }} €
+                </div>
+
+                <!-- SUPPRIMER -->
+                <a href="{{ path('cart_remove', {key: item.key}) }}" class="btn btn-danger btn-sm rounded-pill">
+                    ✕
+                </a>
+
+            </div>
+        {% endfor %}
+
+        <!-- TOTAL GLOBAL -->
+        <div class="text-end mt-4">
+            <h3 class="fw-bold">Total : {{ total }} €</h3>
+        </div>
+
+        <!-- BOUTONS ACTION -->
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mt-4">
+
+            <a href="{{ path('app_products') }}" class="btn-tropical text-center">
+                ← Retour à la boutique
+            </a>
+
+            {% if app.user %}
+                <a href="{{ path('cart_checkout') }}" class="btn-view text-center">
+                    Finaliser la commande
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn-view text-center">
+                    Se connecter pour commander
+                </a>
+            {% endif %}
+
+        </div>
 
     {% endif %}
 
-    <a href="{{ path('app_products') }}">
-        <button>Continuer mes achats</button>
-    </a>
-
-    {% if app.user %}
-        <a href="{{ path('cart_checkout') }}">
-            <button>Finaliser ma commande</button>
-        </a>
-    {% else %}
-        <p>
-            <a href="{{ path('app_login') }}">Connectez-vous</a>
-            pour finaliser votre commande.
-        </p>
-    {% endif %}
+</div>
 
 {% endblock %}

@@ -1,27 +1,125 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>admin/edit.html.twig<h1>
-<h1>{{ product is defined ? 'Modifier le produit' : 'Ajouter un produit' }}</h1>
 
-{{ form_start(form) }}
-{{ form_widget(form) }}
-<button type="submit">Enregistrer</button>
-{{ form_end(form) }}
+<div class="container my-5">
+<p>admin/edit.html.twig</p>
 
-<a href="{{ path('app_admin') }}">Retour</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">✏️ Modifier le produit</h1>
 
-<h3>Stocks</h3>
+        <div class="d-flex gap-2">
+            <a href="{{ path('admin_product_new') }}" class="btn-view">
+                Ajouter un produit
+            </a>
+            <a href="{{ path('app_admin') }}" class="btn btn-outline-dark rounded-pill text-center">
+                Retour
+            </a>
+        </div>
+    </div>
+    <div class="row g-4">
 
-{% for stock in product.stocks %}
-    <form method="post" action="{{ path('admin_stock_update', {'id': stock.id}) }}">
-        <label>{{ stock.size }}</label>
-        <input type="number" name="quantity" value="{{ stock.quantity }}">
-        <button type="submit">Modifier</button>
-    </form>
-    {% if stock.quantity <= 2 %}
-        <span style="color:red;">⚠ Stock faible</span>
-    {% endif %}
-{% endfor %}
+        <!-- FORM PRODUIT -->
+        <div class="col-md-6">
+            <div class="product-card p-4">
+
+                <h5 class="fw-bold mb-4 text-center">Informations produit</h5>
+
+                {{ form_start(form) }}
+
+                <div class="mb-4">
+                    {{ form_label(form.name) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form_label(form.price) }}
+                    {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form_label(form.image) }}
+                    {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                </div>
+
+                <div class="form-check mb-4">
+                    {{ form_widget(form.featured, {'attr': {'class': 'form-check-input'}}) }}
+                    {{ form_label(form.featured, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                </div>
+
+                <button type="submit" class="btn-view w-100">
+                    Enregistrer
+                </button>
+
+                {{ form_end(form) }}
+
+                
+
+            </div>
+        </div>
+
+       {# ================= GESTION DES STOCKS ================= #}
+        {% if product is defined %}
+        <div class="col-12 col-lg-6">
+            <div class="product-card p-4">
+
+                <h5 class="fw-bold mb-4 text-center">Gestion des stocks</h5>
+
+                {# En-tête type tableau #}
+                <div class="d-flex justify-content-between fw-bold border-bottom pb-2 mb-3">
+                    <span>Taille</span>
+                    <span>Stock</span>
+                    <span>Action</span>
+                </div>
+
+                {% for stock in product.stocks %}
+                    <form method="post"
+                        action="{{ path('admin_stock_update', {'id': stock.id}) }}"
+                        class="d-flex align-items-center justify-content-between mb-3">
+
+                        {# Taille #}
+                        <div style="width: 30%;">
+                            <strong>{{ stock.size }}</strong>
+                        </div>
+
+                        {# Quantité + couleur dynamique #}
+                        <div style="width: 30%;">
+                            {% if stock.quantity == 0 %}
+                                <span class="text-danger fw-bold">Rupture</span>
+                            {% elseif stock.quantity <= 2 %}
+                                <span class="text-warning fw-bold">{{ stock.quantity }}</span>
+                            {% else %}
+                                <span class="text-success fw-bold">{{ stock.quantity }}</span>
+                            {% endif %}
+                        </div>
+
+                        {# Input + bouton #}
+                        <div class="d-flex gap-2" style="width: 40%;">
+
+                            <input type="number"
+                                name="quantity"
+                                value="{{ stock.quantity }}"
+                                min="0"
+                                class="form-control form-control-sm">
+
+                            <button type="submit"
+                                    class="btn-view w-10">
+                                ✔
+                            </button>
+
+                        </div>
+
+                    </form>
+                {% else %}
+                    <p class="text-muted text-center">Aucun stock défini.</p>
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
 
 {% endblock %}

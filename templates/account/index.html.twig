@@ -4,21 +4,66 @@
 
 {% block body %}
 
-<div class="container mt-5">
-    <h1>accout/index.html.twig</h1>
-    <h1>Mon compte</h1>
+<div class="container my-5">
+<p>account/index.html.twig</p>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <p><strong>Nom :</strong> {{ app.user.name }}</p>
-            <p><strong>Email :</strong> {{ app.user.email }}</p>
-            <p><strong>Adresse :</strong> {{ app.user.deliveryAddress }}</p>
+    <h1 class="fw-bold mb-4">👤 Mon compte</h1>
+
+    <div class="row g-4">
+
+        <!-- INFOS UTILISATEUR -->
+        <div class="col-md-6">
+            <div class="product-card p-4 h-100">
+
+                <h5 class="fw-bold mb-3">Mes informations</h5>
+
+                <div class="mb-2">
+                    <span class="text-muted small">Nom</span><br>
+                    <strong>{{ app.user.name }}</strong>
+                </div>
+
+                <div class="mb-2">
+                    <span class="text-muted small">Email</span><br>
+                    <strong>{{ app.user.email }}</strong>
+                </div>
+
+                <div class="mb-2">
+                    <span class="text-muted small">Adresse</span><br>
+                    <strong>{{ app.user.deliveryAddress ?: 'Non renseignée' }}</strong>
+                </div>
+
+            </div>
         </div>
+
+        <!-- ACTIONS -->
+        <div class="col-md-6">
+            <div class="product-card p-4 h-100 d-flex flex-column justify-content-between">
+
+                <div>
+                    <h5 class="fw-bold mb-3">Actions</h5>
+
+                    <p class="text-muted">
+                        Gère tes commandes et tes informations personnelles.
+                    </p>
+                </div>
+
+                <div class="d-grid gap-3 mt-3">
+
+                    <a href="{{ path('account_orders') }}" class="btn-view text-center">
+                        Voir mes commandes
+                    </a>
+
+                    <a href="{{ path('app_logout') }}" class="btn btn-outline-danger rounded-pill">
+                        Se déconnecter
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <div class="mt-3">
-        <a href="{{ path('account_orders') }}" class="btn btn-primary">Voir mes commandes</a>
-    </div>
 </div>
 
 {% endblock %}

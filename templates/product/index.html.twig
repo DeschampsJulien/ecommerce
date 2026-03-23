@@ -3,32 +3,75 @@
 {% block title %}Boutique{% endblock %}
 
 {% block body %}
-<h1>Boutique</h1>
 
-<h3>Filtrer par prix :</h3>
-<form method="get" action="{{ path('app_products') }}">
-    <select name="price" onchange="this.form.submit()">
-        <option value="">-- Tous les prix --</option>
-        <option value="10-29" {% if selectedRange == '10-29' %}selected{% endif %}>10 à 29 €</option>
-        <option value="29-35" {% if selectedRange == '29-35' %}selected{% endif %}>29 à 35 €</option>
-        <option value="35-50" {% if selectedRange == '35-50' %}selected{% endif %}>35 à 50 €</option>
-    </select>
-</form>
+<div class="container">
+<p>product/index.html.twig</p>
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h1 class="fw-bold m-0">🛍️ Boutique</h1>
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
-    {% for product in products %}
-        <div style="border:1px solid #ccc; padding:15px; width:200px;">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.price }} €</p>
-            {% if app.user %}
-                <a href="{{ path('product_show', {id: product.id}) }}">
-                    <button>Voir</button>
-                </a>
-            {% endif %}
-        </div>
-    {% else %}
-        <p>Aucun produit trouvé pour cette fourchette de prix.</p>
-    {% endfor %}
+        <!-- FILTRE -->
+        <form method="get" action="{{ path('app_products') }}" class="d-flex align-items-center gap-2 flex-wrap">
+            <label class="fw-semibold mb-0">Filtre les Prix :</label>
+            <select name="price" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                <option value="">Tous</option>
+                <option value="10-29" {% if selectedRange == '10-29' %}selected{% endif %}>10 à 29 €</option>
+                <option value="29-35" {% if selectedRange == '29-35' %}selected{% endif %}>29 à 35 €</option>
+                <option value="35-50" {% if selectedRange == '35-50' %}selected{% endif %}>35 à 50 €</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- PRODUITS -->
+    <div class="row g-4">
+
+        {% for product in products %}
+            <div class="col-md-4 col-lg-3">
+
+                <div class="product-card">
+
+                    <!-- IMAGE -->
+                    <div class="product-img">
+                        <img src="{{ asset('images/' ~ product.image) }}" alt="{{ product.name }}">
+                    </div>
+
+                    <!-- CONTENU -->
+                    <div class="product-body">
+
+                        <div class="product-title">
+                            {{ product.name }}
+                        </div>
+
+                        <div class="product-price">
+                            {{ product.price }} €
+                        </div>
+
+                        {% if app.user %}
+                            <a href="{{ path('product_show', {id: product.id}) }}" class="btn-view">
+                                Voir le produit
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn-view">
+                                Se connecter
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    Aucun produit trouvé pour cette fourchette de prix.
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
 </div>
 
 {% endblock %}

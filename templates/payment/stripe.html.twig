@@ -1,87 +1,47 @@
-{# {% extends 'base.html.twig' %}
-
-{% block title %}Paiement{% endblock %}
-
-{% block body %}
-<h1>Paiement de la commande #{{ order.id }}</h1>
-
-<p>Total : {{ order.total }} €</p>
-
-<hr>
-<h3>Simulation paiement Stripe (sandbox)</h3>
-
-<p>Pour tester, utilise la carte Stripe sandbox :</p>
-<ul>
-    <li>Numéro : 4242 4242 4242 4242</li>
-    <li>Date : n'importe quelle date future</li>
-    <li>CVC : 123</li>
-</ul>
-
-<form id="payment-form">
-    <div id="card-element"></div>
-    <button id="submit" class="btn btn-success">Payer maintenant</button>
-</form>
-
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-const stripe = Stripe("pk_test_TA_CLE_PUBLIQUE"); // remplace par ta clé publique Stripe
-const elements = stripe.elements();
-const card = elements.create("card");
-card.mount("#card-element");
-
-const form = document.getElementById("payment-form");
-
-form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const {paymentIntent, error} = await stripe.confirmCardPayment(
-        "{{ clientSecret }}",
-        {
-            payment_method: { card: card }
-        }
-    );
-
-    if(error){
-        alert(error.message);
-    } else if (paymentIntent.status === "succeeded") {
-        alert("Paiement réussi !");
-        window.location.href = "{{ path('payment_success') }}";
-    }
-});
-</script>
-
-{% endblock %} #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Paiement{% endblock %}
 
 {% block body %}
-<h1>Paiement commande #{{ order.id }}</h1>
-<p>Total : {{ order.total }} €</p>
 
-<p>Carte test Stripe sandbox :</p>
-<ul>
-    <li>Numéro : 4242 4242 4242 4242</li>
-    <li>Date : n'importe quelle date future</li>
-    <li>CVC : 123</li>
-</ul>
+<div class="container my-5" style="max-width: 500px;">
+<p>payment/stripe.html.twig</p>
+    <h1 class="fw-bold mb-4">💳 Paiement commande #{{ order.id }}</h1>
 
-<form id="payment-form">
-    <div id="card-element"></div>
-    <button id="submit" class="btn btn-success">Payer maintenant</button>
-</form>
+    <div class="mb-3">
+        <p>Total à payer :</p>
+        <h3 class="text-corail fw-bold">{{ order.total }} €</h3>
+    </div>
+
+    <div class="mb-3">
+        <p>Carte test Stripe sandbox :</p>
+        <ul>
+            <li>Numéro : 4242 4242 4242 4242</li>
+            <li>Date : n'importe quelle date future</li>
+            <li>CVC : 123</li>
+        </ul>
+    </div>
+
+    <form id="payment-form" class="p-4 product-card">
+
+        <label for="card-element" class="fw-semibold mb-2">Informations carte :</label>
+        <div id="card-element" class="form-control mb-3" style="padding: 12px; border-radius: 8px;"></div>
+
+        <button id="submit" class="btn-view w-100 mt-3">Payer maintenant</button>
+
+    </form>
+
+</div>
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-
-// STRIPE_PUBLIC_KEY=pk_test_51T82GXFPqO7i9Q0UDU9Te6wbKSDC9IMvNr3g3P1HLPNeBr11yigxZLsvrvuOzKCMQDF53WHzD2owXlu0vO3WscsN00HLGkIUOw
-const stripe = Stripe("pk_test_51T82GXFPqO7i9Q0UDU9Te6wbKSDC9IMvNr3g3P1HLPNeBr11yigxZLsvrvuOzKCMQDF53WHzD2owXlu0vO3WscsN00HLGkIUOw"); // ta clé publique
+const stripe = Stripe("pk_test_51T82GXFPqO7i9Q0UDU9Te6wbKSDC9IMvNr3g3P1HLPNeBr11yigxZLsvrvuOzKCMQDF53WHzD2owXlu0vO3WscsN00HLGkIUOw"); // clé publique
 const elements = stripe.elements();
-const card = elements.create("card");
+const card = elements.create("card", { hidePostalCode: true });
 card.mount("#card-element");
 
 const form = document.getElementById("payment-form");
+
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -98,4 +58,5 @@ form.addEventListener("submit", async (event) => {
     }
 });
 </script>
+
 {% endblock %}

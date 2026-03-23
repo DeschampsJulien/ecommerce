@@ -15,12 +15,54 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CartController extends AbstractController
 {
+    // #[Route('/cart', name: 'app_cart')]
+    // public function index(CartService $cartService): Response
+    // {
+    //     return $this->render('cart/index.html.twig', [
+    //         'cart' => $cartService->getCart(),
+    //         'total' => $cartService->getTotal(),
+    //     ]);
+    // }
+
     #[Route('/cart', name: 'app_cart')]
-    public function index(CartService $cartService): Response
-    {
+    public function index(
+        CartService $cartService,
+        ProductRepository $productRepository
+    ): Response {
+
+        $cart = $cartService->getCart();
+        $cartData = [];
+        $total = 0;
+
+        foreach ($cart as $key => $quantity) {
+
+            $parts = explode('_', $key);
+            $id = $parts[0];
+            $size = $parts[1] ?? 'M';
+
+            $product = $productRepository->find($id);
+
+            if (!$product) {
+                continue;
+            }
+
+            $qty = is_array($quantity) ? (int)$quantity['quantity'] : (int)$quantity;
+
+            $cartData[] = [
+                'key' => $key,
+                'name' => $product->getName(),
+                'price' => $product->getPrice(),
+                'quantity' => $qty,
+                'size' => $size,
+                'image' => $product->getImage(), // 🔥 MAINTENANT ÇA MARCHE
+            ];
+
+            $total += $product->getPrice() * $qty;
+        }
+
         return $this->render('cart/index.html.twig', [
-            'cart' => $cartService->getCart(),
-            'total' => $cartService->getTotal(),
+            'cart' => $cartData,
+            'total' => $total,
         ]);
     }
 

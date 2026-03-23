@@ -1,67 +1,96 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>admin/dashboard.html.twig</h1>
-<h1>Dashboard Admin</h1>
 
-<div style="display:flex; gap:20px; margin-bottom:30px;">
-
-    <div style="padding:20px; border:1px solid black;">
-        <h3>Produits</h3>
-        <p>{{ totalProducts }}</p>
+<div class="container my-5">
+<p>admin/dashboard.html.twig.html.twig</p>
+    <!-- ACTIONS -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold mb-4">📊 Dashboard Admin</h1>
+        <a href="{{ path('app_admin') }}" class="btn btn-outline-dark rounded-pill text-center">
+            Retour
+        </a>
     </div>
 
-    <div style="padding:20px; border:1px solid black;">
-        <h3>Commandes</h3>
-        <p>{{ totalOrders }}</p>
+    <!-- STATS -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+            <div class="product-card p-4 text-center">
+                <h6 class="text-muted">Produits</h6>
+                <h2 class="fw-bold">{{ totalProducts }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="product-card p-4 text-center">
+                <h6 class="text-muted">Commandes</h6>
+                <h2 class="fw-bold">{{ totalOrders }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="product-card p-4 text-center">
+                <h6 class="text-muted">Chiffre d'affaires</h6>
+                <h2 class="fw-bold text-corail">{{ totalRevenue }} €</h2>
+            </div>
+        </div>
+
     </div>
 
-    <div style="padding:20px; border:1px solid black;">
-        <h3>Chiffre d'affaires</h3>
-        <p>{{ totalRevenue }} €</p>
+    <!-- TOP PRODUITS -->
+    <div class="product-card p-4">
+
+        <h4 class="fw-bold mb-3">🔥 Produits les plus vendus</h4>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Produit</th>
+                        <th>Ventes</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for product in topProducts %}
+                    <tr>
+                        <td class="fw-bold">
+
+                            {% if loop.index == 1 %}
+                                🥇
+                            {% elseif loop.index == 2 %}
+                                🥈
+                            {% elseif loop.index == 3 %}
+                                🥉
+                            {% else %}
+                                {{ loop.index }}
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ product.productName }}</td>
+
+                        <td class="fw-semibold">
+                            {{ product.totalSold }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            Aucune vente
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
     </div>
 
 </div>
-
-<h2>🔥 Produits les plus vendus</h2>
-
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Produit</th>
-            <th>Quantité vendue</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in topProducts %}
-            <tr>
-                <td>
-                    {% if loop.index == 1 %}
-                        🥇
-                    {% elseif loop.index == 2 %}
-                        🥈
-                    {% elseif loop.index == 3 %}
-                        🥉
-                    {% else %}
-                        {{ loop.index }}
-                    {% endif %}
-                </td>
-                <td>{{ product.productName }}</td>
-                <td>{{ product.totalSold }}</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">Aucune vente</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<br>
-
-<a href="{{ path('admin_product_new') }}">➕ Ajouter produit</a>
-<br><br>
-<a href="{{ path('app_admin') }}">📦 Voir produits</a>
 
 {% endblock %}

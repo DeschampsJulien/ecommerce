@@ -1,259 +1,294 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Stubborn{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Stubborn{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <style>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --lagon: #00a8cc;
+            --corail: #ff6f61;
+            --sable: #fff8f0;
+            --sun: #ffb347;
+        }
+
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f3f3;
-            color: #111;
+            background: var(--sable);
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        .site-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        /* --- NAVBAR --- */
+        .navbar {
+            background: rgba(0,168,204,0.95);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            z-index: 1000;
         }
 
-        .site-header {
-            background: #f3f3f3;
-            border-bottom: 1px solid #999;
-            padding: 18px 24px 14px 24px;
+        .navbar-brand img {
+            width: 140px;
+            transition: transform 0.3s;
         }
 
-        .header-inner {
-            max-width: 1180px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
+        .navbar-brand img:hover {
+            transform: scale(1.05) rotate(-2deg);
         }
 
-        .brand-area {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+        .nav-link {
+            color: #fff !important;
+            position: relative;
+            font-weight: 500;
         }
 
-        .brand-area img {
-            width: 160px;
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            background: var(--corail);
+            bottom: 0;
+            left: 0;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* --- PANIER BADGE --- */
+        .cart-badge {
+            background: var(--corail);
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 50px;
+            margin-left: 5px;
+        }
+
+        /* --- BOUTONS --- */
+        .btn-tropical {
+            background: linear-gradient(135deg, #ffb347, #ff6f61);
+            border: none;
+            color: #fff;
+            border-radius: 30px;
+            padding: 8px 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-tropical:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* --- IMAGES FIX --- */
+        img {
+            max-width: 100%;
             height: auto;
             display: block;
         }
 
-        .slogan {
-            margin-top: 6px;
-            font-size: 14px;
-            color: #222;
-        }
-
-        .main-nav {
-            display: flex;
-            gap: 28px;
-            align-items: center;
-            padding-top: 6px;
-            flex-wrap: wrap;
-        }
-
-        .main-nav a {
-            color: #111;
-            text-decoration: none;
-            font-size: 15px;
-        }
-
-        .main-nav a.active {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        .page-content {
-            flex: 1;
-            padding: 28px 32px;
-        }
-
-        .site-footer {
-            border-top: 1px solid #999;
-            padding: 18px 30px;
-            background: #f3f3f3;
-            font-size: 15px;
-        }
-
-        .container-wide {
-            max-width: 1180px;
-            margin: 0 auto;
-        }
-
-        .auth-page {
-            min-height: 62vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 340px;
-            border: 1px solid #aaa;
-            background: #f3f3f3;
-            padding: 14px 12px 18px 12px;
-            box-sizing: border-box;
-        }
-
-        .auth-title {
-            font-size: 20px;
-            margin: 0 0 10px 0;
-        }
-
-        .auth-separator {
-            border: none;
-            border-top: 1px solid #cfd8e3;
-            margin: 8px 0 14px 0;
-        }
-
-        .auth-label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-
-        .auth-input,
-        .auth-card input[type="text"],
-        .auth-card input[type="email"],
-        .auth-card input[type="password"] {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 8px 10px;
-            border: 1px solid #999;
+        /* --- CARDS PRODUITS --- */
+        .product-card {
+            border-radius: 16px;
+            overflow: hidden;
             background: #fff;
-            margin-bottom: 14px;
-            font-size: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
         }
 
-        .auth-button {
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 35px rgba(0,0,0,0.18);
+        }
+
+        .product-img {
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-body {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .product-price {
+            color: var(--corail);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* --- BOUTON PRODUIT --- */
+        .btn-view {
             display: inline-block;
-            background: #74b9ff;
+            padding: 10px 16px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #ffb347, #ff6f61);
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        /* --- CONTENU --- */
+        main {
+            min-height: 70vh;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            background: var(--lagon);
+            color: #fff;
+        }
+
+        .footer a {
             color: #fff;
             text-decoration: none;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 16px;
-            font-size: 14px;
-            cursor: pointer;
         }
 
-        .auth-link {
-            color: #6c63ff;
-            font-size: 14px;
+        .footer a:hover {
+            color: var(--corail);
             text-decoration: underline;
         }
+    </style>
 
-        .auth-block-text {
-            font-size: 14px;
-            margin: 0 0 8px 0;
-        }
+    {% block stylesheets %}{% endblock %}
+</head>
 
-        .footer-lines p {
-            margin: 4px 0;
-        }
+<body>
 
-        @media (max-width: 900px) {
-            .header-inner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+<!-- NAVBAR  -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm">
+    <div class="container">
 
-            .main-nav {
-                padding-top: 12px;
-                gap: 18px;
-            }
-        }
-        </style>
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+            <img src="{{ asset('images/logo.png') }}" alt="logo">
+        </a>
 
-        {% block stylesheets %}{% endblock %}
-    </head>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <body>
-        <h1>base.html.twig</h1>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
 
-        <div class="site-wrapper">
-            <header class="site-header">
-                <div class="container-wide header-inner">
-                    <div class="brand-area">
-                        <a href="{{ path('app_home') }}">
-                            <img src="{{ asset('images/logo.png') }}" alt="Stubborn logo">
-                        </a>
-                        <div class="slogan"><em>Don't compromise on your look</em></div>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}" href="{{ path('app_home') }}">
+                        Accueil
+                    </a>
+                </li>
 
-                    <nav class="main-nav">
-                        {% if app.user %}
-                            <a href="{{ path('app_home') }}"
-                               class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
-                                Accueil
-                            </a>
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_products') }}">Boutique</a>
+                    </li>
 
-                            <a href="{{ path('app_products') }}"
-                               class="{% if app.request.attributes.get('_route') == 'app_products' %}active{% endif %}">
-                                Boutique
-                            </a>
-
-                            <a href="{{ path('app_cart') }}"
-                               class="{% if app.request.attributes.get('_route') == 'app_cart' %}active{% endif %}">
-                                🛒 Panier ({{ cartItemCount }})
-                            </a>
-
-                            <a href="{{ path('app_account') }}">
-                            Mon compte
-                            </a>
-
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('app_admin') }}"
-                                   class="{% if app.request.attributes.get('_route') starts with 'app_admin_products' %}active{% endif %}">
-                                    Admin
-                                </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_cart') }}">
+                            🛒 Panier
+                            {% if cartItemCount > 0 %}
+                                <span class="cart-badge">{{ cartItemCount }}</span>
                             {% endif %}
+                        </a>
+                    </li>
 
-                            <a href="{{ path('app_logout') }}">
-                                Se déconnecter
-                            </a>
-                        {% else %}
-                            <a href="{{ path('app_home') }}"
-                               class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
-                                Accueil
-                            </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_account') }}">Mon compte</a>
+                    </li>
 
-                            <a href="{{ path('app_register') }}"
-                               class="{% if app.request.attributes.get('_route') == 'app_register' %}active{% endif %}">
-                                S'inscrire
-                            </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_admin') }}">Admin</a>
+                        </li>
+                    {% endif %}
 
-                            <a href="{{ path('app_login') }}"
-                               class="{% if app.request.attributes.get('_route') == 'app_login' %}active{% endif %}">
-                                Se connecter
-                            </a>
-                        {% endif %}
-                    </nav>
-                </div>
-            </header>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-tropical btn-sm" href="{{ path('app_logout') }}">
+                            Déconnexion
+                        </a>
+                    </li>
 
-            <main class="page-content">
-                <div class="container-wide">
-                    {% block body %}{% endblock %}
-                </div>
-            </main>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+                    </li>
 
-           <footer class="site-footer">
-                <div class="container-wide">
-                    <p><strong>Nom de la société :</strong> Stubborn</p>
-                    <p><strong>Adresse :</strong> Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
-                    <p><strong>Adresse de contact :</strong> stubborn@blabla.com</p>
-                </div>
-            </footer>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-tropical btn-sm" href="{{ path('app_login') }}">
+                            Connexion
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
         </div>
-    </body>
+    </div>
+</nav>
+
+<!-- CONTENU -->
+<main class="container my-5">
+    {% block body %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="footer mt-auto py-4">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <h5>Stubborn</h5>
+                <p>Don't compromise on your look 🌴</p>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <h6>Informations</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">CGV</a></li>
+                    <li><a href="#">Politique de confidentialité</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <h6>Contact</h6>
+                <p>Email : stubborn@blabla.com</p>
+                <p>Adresse : Londres</p>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-3">
+            <small>© {{ "now"|date("Y") }} Stubborn - Tous droits réservés</small>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>

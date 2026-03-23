@@ -34,7 +34,8 @@ class CartService
                 'name' => $product->getName(),
                 'price' => $product->getPrice(),
                 'size' => $size,
-                'quantity' => $quantity
+                'quantity' => $quantity,
+                // 'image' => $product->getImage(),
             ];
         }
 

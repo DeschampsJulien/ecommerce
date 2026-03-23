@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Facture</h1>
+
+<div class="header">
+    <strong>Stubborn</strong><br>
+    Piccadilly Circus, London<br>
+    stubborn@blabla.com
+</div>
+
+<div class="info">
+    <strong>Client :</strong> {{ order.user.name }}<br>
+    <strong>Email :</strong> {{ order.user.email }}<br>
+    <strong>Date :</strong> {{ order.createdAt|date('d/m/Y') }}<br>
+    <strong>Commande #{{ order.id }}</strong>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Taille</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in order.orderItems %}
+            <tr>
+                <td>{{ item.productName }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }} €</td>
+                <td>{{ item.price * item.quantity }} €</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="total">
+    <strong>Total : {{ order.total }} €</strong>
+</div>
+
+</body>
+</html>

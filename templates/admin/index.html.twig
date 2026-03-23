@@ -1,55 +1,117 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Admin - Produits{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>admin/index.twig</h1>
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="container my-5">
+<p>admin/index.html.twig</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">🛠 Admin - Produits</h1>
+
+        <div class="d-flex gap-2">
+            <a href="{{ path('admin_product_new') }}" class="btn-view">
+                Ajouter un produit
+            </a>
+            <a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-dark rounded-pill">
+                Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="product-card p-3">
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Stock</th>
+                        <th>Mis en avant</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for product in products %}
+
+                    <tr>
+
+                        {# NOM #}
+                        <td>
+                            <strong>{{ product.name }}</strong>
+                        </td>
+
+                        {# PRIX #}
+                        <td class="text-corail fw-semibold">
+                            {{ product.price|number_format(2, ',', ' ') }} €
+                        </td>
+
+                        {# STOCK #}
+                        <td>
+                            {% for stock in product.stocks %}
+                                <span class="badge bg-light text-dark border me-1">
+                                    {{ stock.size }} : {{ stock.quantity }}
+                                </span>
+                            {% endfor %}
+                        </td>
+
+                        {# FEATURED #}
+                        <td>
+                            {% if product.featured %}
+                                <span class="badge bg-success">Oui</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Non</span>
+                            {% endif %}
+                        </td>
+
+                        {# ACTIONS #}
+                        <td class="text-end">
+
+                            <div class="d-flex justify-content-end gap-2">
+
+                                {# Modifier #}
+                                <a href="{{ path('admin_product_edit', {'id': product.id}) }}"
+                                class="btn btn-sm btn-outline-dark rounded-pill d-flex align-items-center justify-content-center"
+                                style="width:120px;">
+                                    Modifier
+                                </a>
+
+                                {# Supprimer #}
+                                <form action="{{ path('admin_product_delete', {'id': product.id}) }}"
+                                    method="POST">
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger rounded-pill d-flex align-items-center justify-content-center"
+                                            style="width:120px;"
+                                            onclick="return confirm('Supprimer ce produit ?')">
+                                        🗑 Supprimer
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            Aucun produit
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
 </div>
 
-<h1>Admin - Produits</h1>
-<a href="{{ path('app_admin_dashboard') }}">Dashboard</a>
-<br>
-<a href="{{ path('admin_product_new') }}">Ajouter un produit</a>
-
-<table>
-    <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Prix</th>
-            <th>Mis en avant</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.price }} €</td>
-                <td>{{ product.featured ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('admin_product_edit', {'id': product.id}) }}">Modifier</a>
-                    <form action="{{ path('admin_product_delete', {'id': product.id}) }}" method="POST" style="display:inline">
-                        <button type="submit" onclick="return confirm('Supprimer ce produit ?')">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {% for stock in product.stocks %}
-                        {{ stock.size }} : {{ stock.quantity }} <br>
-                    {% endfor %}
-                </td>
-            </tr>
-        {% endfor %}
-
-        
-    </tbody>
-</table>
 {% endblock %}

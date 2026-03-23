@@ -2,43 +2,84 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block body %} 
+{% block body %}
 
-{% if app.user %}
-    <h1>home/index.html.twig</h1>
-    {% for message in app.flashes('success') %}
-        <div style="color:green;">
-            {{ message }}
+<div class="container">
+<P>home/index.html.twig</p>
+    {# ================= CARTE PRINCIPALE ================= #}
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 col-lg-8">
+
+            <div class="product-card text-center p-4">
+
+                {# Bienvenue utilisateur #}
+                {% if app.user %}
+                    <h2 class="fw-bold mb-3">
+                        Bienvenue {{ app.user.name ?? 'utilisateur' }} chez Stubborn
+                    </h2>
+                {% else %}
+                    <h2 class="fw-bold mb-3">Bienvenue 👋</h2>
+                {% endif %}
+
+                <p class="lead mb-4">Don't compromise on your look</p>
+
+                <hr>
+
+                <p class="mb-1"><strong>Adresse :</strong> Piccadilly Circus, London</p>
+                <p class="mb-0"><strong>Email :</strong> stubborn@blabla.com</p>
+
+            </div>
+
         </div>
-    {% endfor %}
-    <h1>Bienvenue {{ app.user.name }} chez Stubborn</h1>
-{% else %}
-    <h1>Bienvenue chez Stubborn</h1>
-{% endif %}
+    </div>
 
-<p><strong>Don't compromise on your look</strong></p>
-<p>Adresse : Piccadilly Circus, London W1J 0DA, Royaume-Uni</p>
-<p>Email : stubborn@blabla.com</p>
 
-<hr>
+    {# ================= PRODUITS ================= #}
+    <h2 class="mb-4">🔥 Sweat-shirts en vedette</h2>
 
-<h2>Sweat-shirts mis en avant</h2>
+    <div class="row g-4">
+        {% for product in featuredProducts %}
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap;">
-    {% for product in featuredProducts %}
-        <div style="border:1px solid #ccc; padding:15px; width:200px;">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.price }} €</p>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
 
-            {% if app.user %}
-                <a href="{{ path('product_show', {id: product.id}) }}">
-                    <button>Voir</button>
-                </a>
-            {% endif %}
-        </div>
-    {% else %}
-        <p>Aucun produit mis en avant.</p>
-    {% endfor %}
+                <div class="product-card">
+
+                    <div class="product-img">
+                        <img src="{{ asset('images/' ~ (product.image ?? 'default.jpg')) }}" 
+                             alt="{{ product.name }}">
+                    </div>
+
+                    <div class="product-body">
+
+                        <div class="product-title">
+                            {{ product.name }}
+                        </div>
+
+                        <div class="product-price">
+                            {{ product.price|number_format(2, ',', ' ') }} €
+                        </div>
+
+                        {% if app.user %}
+                            <a href="{{ path('product_show', {id: product.id}) }}" class="btn-view">
+                                Voir le produit
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn-view">
+                                Se connecter pour voir
+                            </a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+            <p>Aucun produit mis en avant.</p>
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}
