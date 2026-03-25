@@ -2,72 +2,69 @@
 
 namespace App\Form;
 
-use App\Entity\User;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Entity\User; // Entité liée au formulaire
+use Symfony\Component\Form\AbstractType; // Classe de base pour créer un formulaire
+use Symfony\Component\Form\Extension\Core\Type\EmailType; // Champ email
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType; // Checkbox (ex : accepter les conditions)
+use Symfony\Component\Form\Extension\Core\Type\PasswordType; // Champ mot de passe
+use Symfony\Component\Form\Extension\Core\Type\TextType; // Champ texte (ex : nom, adresse)
+use Symfony\Component\Form\FormBuilderInterface; // Pour construire le formulaire
+use Symfony\Component\OptionsResolver\OptionsResolver; // Pour configurer les options du formulaire
+use Symfony\Component\Validator\Constraints\IsTrue; // Validator : doit être true
+use Symfony\Component\Validator\Constraints\Length; // Validator : longueur minimale/maximale
+use Symfony\Component\Validator\Constraints\NotBlank; // Validator : champ obligatoire
 
 class RegistrationFormType extends AbstractType
 {
+    // Construction du formulaire
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
-            ->add('name', TextType::class, [
+            ->add('name', TextType::class, [ // Nom de l'utilisateur
                 'label' => 'Nom',
                 'constraints' => [
-                    new NotBlank([
+                    new NotBlank([ // Champ obligatoire
                         'message' => 'Veuillez saisir votre nom',
                     ]),
                 ],
             ])
-            ->add('email', EmailType::class, [
+            ->add('email', EmailType::class, [ // Email de l'utilisateur
                 'label' => 'Adresse email',
             ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+            ->add('plainPassword', PasswordType::class, [ // Mot de passe en clair
+                'mapped' => false, // Non mappé directement à l'entité User
+                'attr' => ['autocomplete' => 'new-password'], // Attribut HTML
                 'constraints' => [
                     new NotBlank(
-                        message: 'Please enter a password',
+                        message: 'Please enter a password', // Champ obligatoire
                     ),
                     new Length(
-                        min: 6,
+                        min: 6, // Minimum 6 caractères
                         minMessage: 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        max: 4096,
+                        max: 4096, // Limite de sécurité Symfony
                     ),
                 ],
             ])
-            ->add('deliveryAddress', TextType::class, [
+            ->add('deliveryAddress', TextType::class, [ // Adresse de livraison optionnelle
                 'label' => 'Adresse de livraison',
                 'required' => false
-                
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
+            ->add('agreeTerms', CheckboxType::class, [ // Acceptation des conditions
+                'mapped' => false, // Non mappé à l'entité
                 'constraints' => [
                     new IsTrue(
-                        message: 'You should agree to our terms.',
+                        message: 'You should agree to our terms.', // Doit être coché
                     ),
                 ],
             ])
         ;
     }
 
+    // Configuration des options
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => User::class, // Lie le formulaire à l'entité User
         ]);
     }
 }

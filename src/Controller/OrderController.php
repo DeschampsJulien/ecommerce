@@ -2,46 +2,53 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
-use Dompdf\Dompdf;
-use Dompdf\Options;
+use App\Entity\Order; // Entité représentant une commande
+use Dompdf\Dompdf;    // Bibliothèque pour générer des PDF
+use Dompdf\Options;   // Options de configuration pour Dompdf
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response; // Classe pour retourner des réponses HTTP
 use Symfony\Component\Routing\Attribute\Route;
 
 class OrderController extends AbstractController
 {
+    // Route pour générer la facture PDF d'une commande spécifique
     #[Route('/order/{id}/invoice', name: 'order_invoice')]
     public function invoice(Order $order): Response
     {
+        // Vérifie que l'utilisateur est bien connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // Sécurité (empêche accès aux autres commandes)
+        // Vérifie que l'utilisateur connecté est le propriétaire de la commande
         if ($order->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException(); // sinon accès refusé
         }
 
-        // HTML Twig
+        // Génère le HTML de la facture via Twig
         $html = $this->renderView('order/invoice.html.twig', [
             'order' => $order
         ]);
 
-        // Config PDF
+        // Configuration de Dompdf
         $options = new Options();
-        $options->set('defaultFont', 'Arial');
+        $options->set('defaultFont', 'Arial'); // police par défaut
 
+        // Création de l'instance Dompdf avec les options
         $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
+        $dompdf->loadHtml($html);              // Charge le HTML
+        $dompdf->setPaper('A4', 'portrait');   // Définit le format du papier
+        $dompdf->render();                     // Génère le PDF
 
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
+        // Récupère le contenu binaire du PDF
+        $pdfContent = $dompdf->output();
 
+        // Retourne la réponse HTTP contenant le PDF en pièce jointe
         return new Response(
-            $dompdf->stream('facture-'.$order->getId().'.pdf', [
-                "Attachment" => true
-            ]),
+            $pdfContent,
             200,
-            ['Content-Type' => 'application/pdf']
+            [
+                'Content-Type' => 'application/pdf', // type MIME PDF
+                'Content-Disposition' => 'attachment; filename="facture-'.$order->getId().'.pdf"', // téléchargement avec nom
+            ]
         );
     }
 }

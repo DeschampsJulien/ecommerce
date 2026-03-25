@@ -2,15 +2,17 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Product;
-use App\Entity\Stock;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
+use App\Entity\Product; // Entité représentant un produit
+use App\Entity\Stock;   // Entité représentant le stock d'un produit par taille
+use Doctrine\Bundle\FixturesBundle\Fixture; // Classe de base pour les fixtures
+use Doctrine\Persistence\ObjectManager;     // Pour gérer l'insertion en base
 
 class ProductFixtures extends Fixture
 {
+    // Méthode appelée par Doctrine Fixtures pour insérer les données
     public function load(ObjectManager $manager): void
     {
+        // Tableau de produits prédéfinis
         $productsData = [
             ['name' => 'Blackbelt',   'price' => 29.90, 'image' => '1.jpeg',  'Featured' => true],
             ['name' => 'BlueBelt',    'price' => 29.90, 'image' => '2.jpeg',  'Featured' => false],
@@ -24,27 +26,31 @@ class ProductFixtures extends Fixture
             ['name' => 'GreenSchool', 'price' => 42.20, 'image' => '10.jpeg', 'Featured' => false],
         ];
 
+        // Tailles disponibles pour chaque produit
         $sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
+        // Boucle sur chaque produit pour créer l'entité Product
         foreach ($productsData as $data) {
             $product = new Product();
-            $product->setName($data['name']);
-            $product->setPrice($data['price']);
-            $product->setImage($data['image']);
-            $product->setFeatured($data['Featured']);
+            $product->setName($data['name']);       // Nom du produit
+            $product->setPrice($data['price']);     // Prix du produit
+            $product->setImage($data['image']);     // Nom de l'image
+            $product->setFeatured($data['Featured']); // Produit mis en avant ou non
 
-            $manager->persist($product);
+            $manager->persist($product); // Prépare le produit pour insertion
 
+            // Boucle sur chaque taille pour créer le stock
             foreach ($sizes as $size) {
                 $stock = new Stock();
-                $stock->setSize($size);
-                $stock->setQuantity(10);
-                $stock->setProduct($product);
+                $stock->setSize($size);         // Taille du stock
+                $stock->setQuantity(5);         // Quantité initiale pour chaque taille
+                $stock->setProduct($product);   // Associe le stock au produit
 
-                $manager->persist($stock);
+                $manager->persist($stock); // Prépare le stock pour insertion
             }
         }
 
+        // Exécute toutes les insertions en base
         $manager->flush();
     }
 }
