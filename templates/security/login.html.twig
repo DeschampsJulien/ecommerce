@@ -1,34 +1,114 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+<div class="container my-5" style="max-width: 500px;">
+<p>security/login.html.twig</p>
+    {# ================= TITRE ================= #}
+    <h1 class="fw-bold text-center mb-4">🔐 Connexion</h1>
+
+    <div class="product-card p-4">
+
+        <form method="post">
+
+            {# ================= ERREUR ================= #}
+            {% if error %}
+                <div class="alert alert-danger text-center">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            {# ================= DEJA CONNECTÉ ================= #}
+            {% if app.user %}
+                <div class="alert alert-info text-center">
+                    Connecté en tant que <strong>{{ app.user.userIdentifier }}</strong><br>
+                    <a href="{{ logout_path() }}">Se déconnecter</a>
+                </div>
+            {% endif %}
+
+            {# ================= EMAIL ================= #}
+            <div class="mb-3">
+                <label for="inputEmail" class="form-label">Email</label>
+                <input type="email"
+                       value="{{ last_username }}"
+                       name="email"
+                       id="inputEmail"
+                       class="form-control"
+                       placeholder="Votre email"
+                       autocomplete="email"
+                       required
+                       autofocus>
+            </div>
+
+            {# ================= PASSWORD + TOGGLE ================= #}
+            <div class="mb-3 position-relative">
+                <label for="inputPassword" class="form-label">Mot de passe</label>
+
+                <input type="password"
+                       name="password"
+                       id="inputPassword"
+                       class="form-control"
+                       placeholder="Votre mot de passe"
+                       autocomplete="current-password"
+                       required>
+
+                {# Bouton oeil #}
+                <button type="button"
+                        id="togglePassword"
+                        style="position:absolute; top:38px; right:10px; border:none; background:none; cursor:pointer;">
+                    👁️
+                </button>
+            </div>
+
+            {# ================= CSRF ================= #}
+            <input type="hidden"
+                   name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}">
+
+            {# ================= REMEMBER ================= #}
+            <div class="form-check mb-4">
+                <input type="checkbox"
+                       name="_remember_me"
+                       id="remember_me"
+                       class="form-check-input">
+                <label for="remember_me" class="form-check-label">
+                    Se souvenir de moi
+                </label>
+            </div>
+
+            {# ================= BOUTON ================= #}
+            <button class="btn-view w-100" type="submit">
+                🚀 Se connecter
+            </button>
+
+        </form>
+
+        {# ================= REGISTER ================= #}
+        <div class="text-center mt-3">
+            <small>
+                Pas encore de compte ?
+                <a href="{{ path('app_register') }}">S'inscrire</a>
+            </small>
         </div>
-    {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
     </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+</div>
+
+{# ================= SCRIPT SHOW/HIDE PASSWORD ================= #}
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('inputPassword');
+
+    togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+
+        // Change icône
+        this.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+</script>
+
 {% endblock %}

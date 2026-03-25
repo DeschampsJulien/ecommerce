@@ -205,11 +205,11 @@
 
                 {% if app.user %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_products') }}">Boutique</a>
+                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_products' %}active{% endif %}" href="{{ path('app_products') }}">Boutique</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_cart') }}">
+                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_cart' %}active{% endif %}" href="{{ path('app_cart') }}">
                             🛒 Panier
                             {% if cartItemCount > 0 %}
                                 <span class="cart-badge">{{ cartItemCount }}</span>
@@ -218,12 +218,12 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_account') }}">Mon compte</a>
+                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_account' %}active{% endif %}" href="{{ path('app_account') }}">Mon compte</a>
                     </li>
 
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_admin') }}">Admin</a>
+                            <a class="nav-link {% if app.request.attributes.get('_route') == 'app_admin' %}active{% endif %}" href="{{ path('app_admin') }}">Admin</a>
                         </li>
                     {% endif %}
 
@@ -235,7 +235,7 @@
 
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+                        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_register' %}active{% endif %}" href="{{ path('app_register') }}">S'inscrire</a>
                     </li>
 
                     <li class="nav-item ms-lg-2">

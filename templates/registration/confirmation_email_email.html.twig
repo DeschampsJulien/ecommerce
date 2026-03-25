@@ -1,12 +1,38 @@
-<h1>confirmation_email_email.html.twig</h1>
+<p>registration/confirmation_email_email.html.twig</p>
+<h2 style="text-align:center; font-family:Arial, sans-serif;">
+    📩 Confirmez votre email
+</h2>
 
-<h1>Confirmez votre email</h1>
+<p style="text-align:center; font-family:Arial, sans-serif;">
+    Merci pour votre inscription 👋<br><br>
+    Cliquez sur le bouton ci-dessous pour activer votre compte :
+</p>
 
-<p>Cliquez sur le lien ci-dessous pour activer votre compte :</p>
+<div style="text-align:center; margin: 30px 0;">
+    <a href="{{ signedUrl }}"
+       style="
+            background-color:#000;
+            color:#fff;
+            padding:12px 25px;
+            text-decoration:none;
+            border-radius:30px;
+            display:inline-block;
+            font-weight:bold;
+            font-family:Arial, sans-serif;
+       ">
+        ✅ Confirmer mon email
+    </a>
+</div>
 
-<a href="{{ signedUrl }}">Confirmer mon email</a>
+<p style="text-align:center; font-family:Arial, sans-serif; color:#555;">
+    ⏳ Ce lien expire dans<br>
+    <strong>
+        {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}
+    </strong>
+</p>
 
-<p>
-Ce lien expire dans
-{{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}
+<hr style="margin:30px 0;">
+
+<p style="text-align:center; font-size:12px; color:#888; font-family:Arial, sans-serif;">
+    Si vous n’êtes pas à l’origine de cette inscription, ignorez simplement cet email.
 </p>

@@ -1,14 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Confirmation_email{% endblock %}
+{% block title %}Confirmation email{% endblock %}
 
-{% block body %} 
-<h1>confirmation_email.html.twig</h1>
+{% block body %}
 
-{# <h1>Inscription réussie ! {{ app.user.name }}</h1> #}
+<div class="container my-5" style="max-width: 500px;">
+<p>registration/confirmation_email.html.twig</p>
+    {# ================= CARTE ================= #}
+    <div class="product-card p-4 text-center">
 
-<p><strong>Un email de confirmation a été envoyé.</strong></p>
+        {# ================= TITRE ================= #}
+        <h2 class="fw-bold mb-3">📩 Confirmation envoyée</h2>
 
-<p>Veuillez cliquer sur le lien dans l’email pour activer votre compte</p>
+        {# ================= MESSAGE ================= #}
+        <p class="mb-3">
+            <strong>Un email de confirmation a été envoyé sur http://127.0.0.1:8000/_profiler/xxxxxx?panel=mailer.</strong>
+        </p>
+
+        <p class="text-muted">
+            Veuillez cliquer sur le lien dans l’email pour activer votre compte.
+        </p>
+
+        {# ================= UTILISATEUR ================= #}
+        {% if app.user %}
+            <div class="alert alert-info mt-3">
+                Compte créé pour <strong>{{ app.user.name ?? app.user.userIdentifier }}</strong>
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
 
 {% endblock %}

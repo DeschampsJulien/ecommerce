@@ -70,43 +70,6 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    // #[Route('/verify/email', name: 'app_verify_email')]
-    // public function verifyUserEmail(
-    //     Request $request,
-    //     EntityManagerInterface $entityManager,
-    //     Security $security
-    // ): Response {
-    //     $id = $request->query->get('id');
-
-    //     if (!$id) {
-    //         return $this->redirectToRoute('app_register');
-    //     }
-
-    //     $user = $entityManager->getRepository(User::class)->find($id);
-    //     if (!$user) {
-    //         return $this->redirectToRoute('app_register');
-    //     }
-
-    //     if ($user->isVerified()) {
-    //         $this->addFlash('info', 'Votre email est déjà vérifié.');
-    //         return $this->redirectToRoute('app_home');
-    //     }
-
-    //     try {
-    //         $this->emailVerifier->handleEmailConfirmation($request, $user);
-    //     } catch (VerifyEmailExceptionInterface $exception) {
-    //         $this->addFlash('verify_email_error', $exception->getReason());
-    //         return $this->redirectToRoute('app_register');
-    //     }
-
-    //     // CONNEXION AUTOMATIQUE APRÈS VALIDATION
-    //     $security->login($user, SecurityControllerAuthenticator::class, 'main');
-
-    //     $this->addFlash('success', 'Votre email est confirmé. Bienvenue !');
-
-    //     return $this->redirectToRoute('app_home');
-    // }
-
    #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(
         Request $request,
@@ -138,6 +101,6 @@ class RegistrationController extends AbstractController
         // ✅ CONNEXION AUTOMATIQUE QUI MARCHE À 100%
         $security->login($user, SecurityControllerAuthenticator::class);
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_login');
     }
 }

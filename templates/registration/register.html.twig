@@ -1,23 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
+
+<div class="container my-5" style="max-width: 500px;">
+<P>registration/register.html.twig</p>
+    <h1 class="fw-bold text-center mb-4">📝 Créer un compte</h1>
+
     {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        <div class="alert alert-danger text-center">
+            {{ flash_error }}
+        </div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <div class="product-card p-4">
 
-    {{ form_errors(registrationForm) }}
+        {{ form_start(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {# ================= NOM ================= #}
+        <div class="mb-3">
+            {{ form_label(registrationForm.name, 'Nom') }}
+            {{ form_widget(registrationForm.name, {
+                'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Votre nom'
+                }
+            }) }}
+            {{ form_errors(registrationForm.name) }}
+        </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        {# ================= EMAIL ================= #}
+        <div class="mb-3">
+            {{ form_label(registrationForm.email, 'Email') }}
+            {{ form_widget(registrationForm.email, {
+                'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Votre email'
+                }
+            }) }}
+            {{ form_errors(registrationForm.email) }}
+        </div>
+
+        {# ================= PASSWORD ================= #}
+        <div class="mb-3">
+            {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
+            {{ form_widget(registrationForm.plainPassword, {
+                'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Votre mot de passe'
+                }
+            }) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+        </div>
+
+        {# ================= ADRESSE ================= #}
+        <div class="mb-3">
+            {{ form_label(registrationForm.deliveryAddress, 'Adresse de livraison') }}
+            {{ form_widget(registrationForm.deliveryAddress, {
+                'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'Votre adresse de livraison'
+                }
+            }) }}
+            {{ form_errors(registrationForm.deliveryAddress) }}
+        </div>
+
+        {# ================= TERMS ================= #}
+        <div class="form-check mb-4">
+            {{ form_widget(registrationForm.agreeTerms, {
+                'attr': {'class': 'form-check-input'}
+            }) }}
+            {{ form_label(registrationForm.agreeTerms, null, {
+                'label_attr': {'class': 'form-check-label'}
+            }) }}
+            {{ form_errors(registrationForm.agreeTerms) }}
+        </div>
+
+        {# ================= BOUTON ================= #}
+        <button type="submit" class="btn-view w-100">
+            🚀 S'inscrire
+        </button>
+
+        {{ form_end(registrationForm) }}
+
+        {# ================= LOGIN ================= #}
+        <div class="text-center mt-3">
+            <small>
+                Déjà un compte ?
+                <a href="{{ path('app_login') }}">Se connecter</a>
+            </small>
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

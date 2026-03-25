@@ -31,11 +31,6 @@ class RegistrationFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Adresse email',
             ])
-            ->add('deliveryAddress', TextType::class, [
-                'label' => 'Adresse de livraison',
-                'required' => false
-                
-            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -52,6 +47,11 @@ class RegistrationFormType extends AbstractType
                         max: 4096,
                     ),
                 ],
+            ])
+            ->add('deliveryAddress', TextType::class, [
+                'label' => 'Adresse de livraison',
+                'required' => false
+                
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
